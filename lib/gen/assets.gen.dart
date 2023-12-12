@@ -39,6 +39,10 @@ class $AssetsImagesGen {
   AssetGenImage get bunnySprite =>
       const AssetGenImage('assets/images/bunny_sprite.png');
 
+  /// File path: assets/images/lion_sprite.png
+  AssetGenImage get lionSprite =>
+      const AssetGenImage('assets/images/lion_sprite.png');
+
   /// File path: assets/images/rayworld_background.png
   AssetGenImage get rayworldBackground =>
       const AssetGenImage('assets/images/rayworld_background.png');
@@ -53,6 +57,7 @@ class $AssetsImagesGen {
         run,
         background,
         bunnySprite,
+        lionSprite,
         rayworldBackground,
         unicornAnimation
       ];

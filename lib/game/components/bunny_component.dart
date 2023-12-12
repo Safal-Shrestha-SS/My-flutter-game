@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:my_game/game/helpers/direction.dart';
+import 'package:my_game/game/new_game.dart';
 import 'package:my_game/gen/assets.gen.dart';
 
-class BunnyComponent extends SpriteAnimationComponent with HasGameRef {
-  BunnyComponent() : super(size: Vector2.all(120), anchor: Anchor.topLeft);
+class BunnyComponent extends SpriteAnimationComponent
+    with HasGameRef<NewGame>, CollisionCallbacks {
+  BunnyComponent() : super(size: Vector2.all(120), anchor: Anchor.center);
 
   late SpriteAnimation leftAnimation;
   late SpriteAnimation rightAnimation;
@@ -26,6 +29,10 @@ class BunnyComponent extends SpriteAnimationComponent with HasGameRef {
       srcSize: Vector2.all(48),
     );
 
+    add(
+      CircleHitbox(),
+    );
+
     idleAnimation = bunnySheet.createAnimation(row: 0, stepTime: .5, to: 1);
     upAnimation = bunnySheet.createAnimation(row: 1, stepTime: .5, to: 4);
     leftAnimation = bunnySheet.createAnimation(row: 2, stepTime: .5, to: 4);
@@ -35,37 +42,52 @@ class BunnyComponent extends SpriteAnimationComponent with HasGameRef {
     animation = idleAnimation;
   }
 
-   @override
+  @override
   void update(double dt) {
     super.update(dt);
     movePlayer(dt);
   }
-
+ @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    log("message");
+    super.onCollision(intersectionPoints, other);
+  }
+  
+    
   void movePlayer(double delta) {
     switch (direction) {
       case Direction.up:
-        // if (canPlayerMoveUp()) {
-          animation = upAnimation;
-          moveUp(delta);
-        // }
+        if (position.y <= 0) break;
+        animation = upAnimation;
+        moveUp(delta);
+      // }
       case Direction.down:
-        // if (canPlayerMoveDown()) {
-          animation = downAnimation;
-          moveDown(delta);
-        // }
+        if (position.y >=
+            game.homeMap.tileMap.map.height *
+                    game.homeMap.tileMap.map.tileHeight -
+                size.y) {
+          break;
+        }
+        animation = downAnimation;
+        moveDown(delta);
+      // }
       case Direction.left:
-        // if (canPlayerMoveLeft()) {
-          animation = leftAnimation;
-          moveLeft(delta);
-        // }
+        if (position.x <= 0) break;
+        animation = leftAnimation;
+        moveLeft(delta);
+      // }
       case Direction.right:
-        // if (canPlayerMoveRight()) {
-          animation = rightAnimation;
-          moveRight(delta);
-        // }
+        if (position.x >=
+            game.homeMap.tileMap.map.width *
+                    game.homeMap.tileMap.map.tileWidth -
+                size.x) {
+          break;
+        }
+        animation = rightAnimation;
+        moveRight(delta);
+      // }
       case Direction.none:
         animation = idleAnimation;
-        break;
     }
   }
 
