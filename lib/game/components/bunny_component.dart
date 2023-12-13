@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
+import 'package:my_game/game/components/lion_component.dart';
 import 'package:my_game/game/helpers/direction.dart';
 import 'package:my_game/game/new_game.dart';
 import 'package:my_game/gen/assets.gen.dart';
@@ -32,7 +35,7 @@ class BunnyComponent extends SpriteAnimationComponent
     add(
       CircleHitbox(
         radius: 24,
-        position: Vector2.all(36)
+        position: Vector2.all(36),
       ),
     );
 
@@ -54,7 +57,8 @@ class BunnyComponent extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     // game.gameOver = true;
-    if (intersectionPoints.length > 2) {
+    log(intersectionPoints.length.toString());
+    if (intersectionPoints.length >= 2 && other is LionComponent) {
       game.gameOver = true;
     }
     super.onCollision(intersectionPoints, other);

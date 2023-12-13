@@ -26,7 +26,7 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
   @override
   Future<void> onLoad() async {
     speed = 5;
-    
+
     final lionSheet = SpriteSheet(
       image: game.images.fromCache(
         MyAssets.images.lionSprite.path,
@@ -35,7 +35,12 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
     );
 
     flyAnimation = lionSheet.createAnimation(row: 0, stepTime: .7, to: 4);
-    add(RectangleHitbox());
+    add(
+      RectangleHitbox(
+        size: Vector2.all(68),
+        position: Vector2.all(30),
+      ),
+    );
 
     animation = flyAnimation;
   }
@@ -45,10 +50,10 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
     super.update(dt);
     if (canBoostSpeed) {
       if (Random().nextDouble() > 0.8) {
-        speed = 200;
+        speed = 140;
         canBoostSpeed = false;
         speedBoostTimer = timer.Timer(const Duration(milliseconds: 500), () {
-          speed = 100;
+          speed = 70;
           canBoostSpeed = true;
         });
       }
@@ -63,7 +68,7 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
       flipHorizontally();
       lionDirection = true;
     }
-    
+
     position += velocity * dt;
   }
 }
