@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:my_game/l10n/l10n.dart';
 import 'package:my_game/loading/loading.dart';
 
@@ -44,7 +43,6 @@ class AppView extends StatelessWidget {
             backgroundColor: MaterialStateProperty.all(const Color(0xFF2A48DF)),
           ),
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

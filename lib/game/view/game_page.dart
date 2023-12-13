@@ -3,12 +3,12 @@ import 'package:flame_audio/bgm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_game/game/game.dart';
-import 'package:my_game/game/helpers/joypad.dart';
 import 'package:my_game/game/new_game.dart';
+import 'package:my_game/game/overlay/game_over.dart';
+import 'package:my_game/game/overlay/game_win.dart';
+import 'package:my_game/game/overlay/joypad_overlay.dart';
 import 'package:my_game/gen/assets.gen.dart';
-import 'package:my_game/l10n/l10n.dart';
 import 'package:my_game/loading/cubit/cubit.dart';
-
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});
@@ -35,13 +35,11 @@ class GamePage extends StatelessWidget {
 class GameView extends StatefulWidget {
   const GameView({super.key});
 
-
   @override
   State<GameView> createState() => _GameViewState();
 }
 
 class _GameViewState extends State<GameView> {
-   NewGame? _game;
 
   late final Bgm bgm;
 
@@ -70,20 +68,25 @@ class _GameViewState extends State<GameView> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.bodySmall!.copyWith(
-          color: Colors.white,
-          fontSize: 4,
-        );
 
-    _game = NewGame();
-        // VeryGoodFlameGame(
-        //   l10n: context.l10n,
-        //   effectPlayer: context.read<AudioCubit>().effectPlayer,
-        //   textStyle: textStyle,
-        // );
+    // VeryGoodFlameGame(
+    //   l10n: context.l10n,
+    //   effectPlayer: context.read<AudioCubit>().effectPlayer,
+    //   textStyle: textStyle,
+    // );
     return Stack(
-      children: [
-        Positioned.fill(child: GameWidget(game: _game!)),
+      children: [ 
+        Positioned.fill(
+          child: GameWidget<NewGame>.controlled(
+            gameFactory: NewGame.new,
+            overlayBuilderMap: {
+              'JoyPad': (_, game) => JoyPadOverlay(game: game),
+              'GameOver': (_, game) => GameOver(game: game),
+              'GameWin':(_, game) => GameWin(game: game)
+            },
+            initialActiveOverlays: const ['JoyPad']
+          ),
+        ),
         Align(
           alignment: Alignment.topRight,
           child: BlocBuilder<AudioCubit, AudioState>(
@@ -97,14 +100,6 @@ class _GameViewState extends State<GameView> {
             },
           ),
         ),
-          Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child:
-                    Joypad(onDirectionChanged: _game!.onJoypadDirectionChanged),
-              ),
-            )
       ],
     );
   }

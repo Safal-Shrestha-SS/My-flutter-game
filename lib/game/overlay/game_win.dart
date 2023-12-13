@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:my_game/game/new_game.dart';
 
-class GameOver extends StatelessWidget {
-  const GameOver({required this.game, super.key});
+class GameWin extends StatelessWidget {
+  const GameWin({required this.game, super.key});
   // Reference to parent game.
   final NewGame game;
 
@@ -28,12 +29,18 @@ class GameOver extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Game Over',
+                'Winner',
                 style: TextStyle(
                   color: whiteTextColor,
                   fontSize: 24,
                 ),
-              ),
+              )
+                  .animate(
+                    onComplete: (controller) => controller.repeat(reverse: true),
+                  )
+                  .scaleXY(duration: 2.seconds)
+                  .then()
+                  .rotate(duration: 1.seconds),
               const SizedBox(height: 40),
               SizedBox(
                 width: 200,
@@ -41,7 +48,7 @@ class GameOver extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     game.reset();
-                    game.overlays.remove('GameOver');
+                    game.overlays.remove('GameWin');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteTextColor,

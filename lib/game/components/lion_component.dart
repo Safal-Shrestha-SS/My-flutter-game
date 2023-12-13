@@ -1,3 +1,6 @@
+import 'dart:async' as timer;
+import 'dart:math';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
@@ -10,14 +13,20 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
 
   late SpriteAnimation flyAnimation;
   Direction direction = Direction.none;
-  final double speed = 50;
 
-  final Vector2 velocity = Vector2.zero();
+  late double speed;
 
   //false means facing left and true means facing right
   bool lionDirection = true;
+
+  bool canBoostSpeed = true;
+
+  late timer.Timer speedBoostTimer;
+
   @override
   Future<void> onLoad() async {
+    speed = 5;
+    
     final lionSheet = SpriteSheet(
       image: game.images.fromCache(
         MyAssets.images.lionSprite.path,
@@ -25,8 +34,8 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
       srcSize: Vector2.all(16),
     );
 
-    flyAnimation = lionSheet.createAnimation(row: 0, stepTime: .5, to: 4);
-    add(RectangleHitbox(collisionType: CollisionType.active));
+    flyAnimation = lionSheet.createAnimation(row: 0, stepTime: .7, to: 4);
+    add(RectangleHitbox());
 
     animation = flyAnimation;
   }
@@ -34,6 +43,16 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
   @override
   void update(double dt) {
     super.update(dt);
+    if (canBoostSpeed) {
+      if (Random().nextDouble() > 0.8) {
+        speed = 200;
+        canBoostSpeed = false;
+        speedBoostTimer = timer.Timer(const Duration(milliseconds: 500), () {
+          speed = 100;
+          canBoostSpeed = true;
+        });
+      }
+    }
     final direction = (game.bunnyComponent.position - position).normalized();
     final velocity = direction * speed;
     if (direction.x < 0 && lionDirection) {
@@ -44,7 +63,7 @@ class LionComponent extends SpriteAnimationComponent with HasGameRef<NewGame> {
       flipHorizontally();
       lionDirection = true;
     }
-
+    
     position += velocity * dt;
   }
 }
