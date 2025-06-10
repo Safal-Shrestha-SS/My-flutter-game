@@ -1,0 +1,2 @@
+/Users/success_supreme/project/My-flutter-game/android/app/.cxx/Debug/572t425f/x86/CMakeFiles/edit_cache.dir
+/Users/success_supreme/project/My-flutter-game/android/app/.cxx/Debug/572t425f/x86/CMakeFiles/rebuild_cache.dir
